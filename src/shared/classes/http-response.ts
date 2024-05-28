@@ -1,5 +1,5 @@
 import { EMensagem } from '../enums/mensagem.enum';
-import { IResponse } from '../interfaces/response.interface';
+import { IResponse } from '../interfaces/respose.interface';
 
 export class HttpResponse<T> implements IResponse<T> {
   message = '';
@@ -22,6 +22,11 @@ export class HttpResponse<T> implements IResponse<T> {
 
   onUnactivated(): IResponse<T> {
     this.message = EMensagem.DesativadoSucesso;
+    return this;
+  }
+
+  onSuccess(message: string): IResponse<T> {
+    this.message = message;
     return this;
   }
 }

@@ -1,6 +1,5 @@
-import { IsEmail, IsEmpty, IsNotEmpty, MaxLength } from "class-validator";
+import { IsEmail, IsNotEmpty, MaxLength } from "class-validator";
 import { EMensagem } from "src/shared/enums/mensagem.enum";
-import { UpdateUsuarioDto } from "./update-usuario.dto";
 
 export class CreateUsuarioDto {
     @IsNotEmpty({ message: `Nome ${EMensagem.NaoPodeSerVazio}`})
@@ -19,8 +18,4 @@ export class CreateUsuarioDto {
 
     @IsNotEmpty({ message: `admin ${EMensagem.NaoPodeSerVazio}` })
     admin: boolean;
-
-    constructor(createUsuarioDto: CreateUsuarioDto | UpdateUsuarioDto) {
-        Object.assign(this, createUsuarioDto);
-    }
 }

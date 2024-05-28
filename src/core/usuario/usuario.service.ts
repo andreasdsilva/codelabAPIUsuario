@@ -5,6 +5,10 @@ import { Repository } from 'typeorm';
 import { Usuario } from './entities/usuario.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EMensagem } from 'src/shared/enums/mensagem.enum';
+import { handleFilter } from 'src/shared/helper/sql.helper';
+import { IFindAllFilter } from 'src/shared/interfaces/find-all-filter.interface';
+import { IFindAllOrder } from 'src/shared/interfaces/find-all-order.interface';
+import { bcrypt } from 'bcrypt'
 
 @Injectable()
 export class UsuarioService {
@@ -19,6 +23,9 @@ export class UsuarioService {
       throw new HttpException(EMensagem.ImpossivelCadastrar, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    const usuario = new Usuario(createUsuarioDto);
+    usuario.senha = bcrypt.hashSync(usuario.senha);
+
     const created = this.repository.create(createUsuarioDto);
 
     await this.repository.save(created);
@@ -26,13 +33,16 @@ export class UsuarioService {
     return created;
   }
 
-  async findAll(page: number, size: number): Promise<Usuario[]> {
+  async findAll(page: number, size: number, order: IFindAllOrder, 
+    filter?: IFindAllFilter | IFindAllFilter[],): Promise<Usuario[]> {
     page--;
+
+    const where = handleFilter(filter);
 
     return await this.repository.find({
       loadEagerRelations: false,
-      skip: size * page || 0,
-      take: size || 10,
+      skip: size * page,
+      take: size,
     });
   }
 
@@ -53,6 +63,8 @@ export class UsuarioService {
     if(found && found.id !== id) {
       throw new HttpException(EMensagem.AlteracaoImpossivel, HttpStatus.NOT_ACCEPTABLE);
     }
+
+    updateUsuarioDto.senha = bcrypt.hashSync(updateUsuarioDto.senha);
 
     return await this.repository.save(updateUsuarioDto);
   }

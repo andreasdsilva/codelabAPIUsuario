@@ -10,4 +10,6 @@ export enum EMensagem {
     AlteracaoImpossivel = 'Impossível alterar cadastro',
     DesativacaoImpossivel = 'Impossível desativar cadastro',
     SalvoSucesso = 'Salvo com sucesso',
+    FilterInvalido = 'Filtro inválido',
+    OrderInvalido = 'Ordenação inválida',
 }
